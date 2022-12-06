@@ -32,6 +32,9 @@ def process_epub(epub_path):
             raise Exception("Can not find opf file for {}!".format(epub_path))
 
         b = Book(opf_file)
+        fout = open("{}.txt".format(base_name), 'w')
+        b.write_txt(fout)
+        fout.close()
 
     except Exception as e:
         traceback.print_exc(limit=100)
