@@ -1,16 +1,16 @@
 import bs4
 import os
 
-DEFAULT_FONT = "default_font"
-FONT_MAPS = {
-    "p": "p_font",
-    "h1": "h1_font",
-    "h2": "h2_font",
-    "h3": "h3_font",
-    "h4": "h4_font",
-    "h5": "h5_font",
-    "h6": "h6_font",
-}
+DEFAULT_FONT = "default"
+FONT_TAGS = [
+    "p",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+]
 BLOCK_TAGS = [
     "p",
     "h1",
@@ -57,14 +57,14 @@ class ContentParser(object):
         })
 
     def parse_tag_common(self, x):
-        if x.name in FONT_MAPS:
-            self.stack_fonts.append(FONT_MAPS[x.name])
+        if x.name in FONT_TAGS:
+            self.stack_fonts.append(x.name)
         if x.contents:
             for y in x.contents:
                 self.parse(y)
             if x.name in BLOCK_TAGS:
                 self.parse_string("\n")
-        if x.name in FONT_MAPS:
+        if x.name in FONT_TAGS:
             self.stack_fonts.pop(-1)
 
     def parse_tag_a(self, x):
@@ -92,3 +92,7 @@ class ContentParser(object):
                 fout.write(s)
             else:
                 raise Exception("Unexcepted content type: {}!".format(c['type']))
+
+    def write_pdf(self, pdf_writer):
+        for c in self.contents:
+            pdf_writer.write(c)

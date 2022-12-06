@@ -8,7 +8,7 @@ from parse_content import ContentParser
 class Chapter(object):
 
     def __init__(self, html_file):
-        print(" + Init Chapter from html {}".format(html_file))
+        # print(" + Init Chapter from html {}".format(html_file))
         self.chapter_name = os.path.basename(html_file)
         html = open(html_file, 'rb').read()
         bs = BeautifulSoup(html, features='html.parser')
@@ -16,13 +16,17 @@ class Chapter(object):
 
         self.content = ContentParser(os.path.dirname(html_file))
         self.content.parse(bs.body)
-        print(" + Found {} contents.".format(len(self.content.contents)))
+        # print(" + Found {} contents.".format(len(self.content.contents)))
 
     def write_txt(self, fout):
         # first, set label with html file name
         fout.write("---------------[Label: {}]--------------\n".format(self.chapter_name))
         self.content.write_txt(fout)
 
+    def write_pdf(self, pdf_writer):
+        pdf_writer.write_new_page()
+        pdf_writer.write_label(self.chapter_name)
+        self.content.write_pdf(pdf_writer)
 
 class Book(object):
 
@@ -38,7 +42,7 @@ class Book(object):
         # find all chapter html files
         for item in bs.package.manifest.findAll('item'): 
             href = item['href']
-            if href and href.endswith('html'):
+            if href and href.endswith('html') or href.endswith("htm"):
                 chapter_files.append(os.path.join(opf_dir, href))
         print(" + Found {} chapter html files.".format(len(chapter_files)))
 
@@ -50,6 +54,10 @@ class Book(object):
     def write_txt(self, fout):
         for chapter in self.chapters:
             chapter.write_txt(fout)
+
+    def write_pdf(self, pdf_writer):
+        for chapter in self.chapters:
+            chapter.write_pdf(pdf_writer)
 
 if __name__ == "__main__":
     c = Chapter("chapter2.html")
