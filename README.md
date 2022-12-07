@@ -1,5 +1,5 @@
 # epub2pdf
-网上的其他开源项目，一般使用模拟浏览器将`epub`文件打开，再打印成`pdf`，如借助h`khtmltopdf`等工具，容易出现字体、图片、链接错误。
+网上的其他开源项目，一般使用模拟浏览器将`epub`文件打开，再打印成`pdf`，如借助`wkhtmltopdf`等工具，容易出现字体、图片、链接错误。
 
 本项目直接解析`epub`中的`html`，提取其中的目录、文字、图片、引用关系等，然后使用`reportLab`工具自定义排版，并生成`pdf`。
 
@@ -19,7 +19,7 @@
 ```
 python main.py ${epub_path}
 ```
-批量处理文件夹内所有`epub`文件
+批量处理文件夹内所有`epub`文件：
 ```
 python main.py ${epub_dir}
 ```
