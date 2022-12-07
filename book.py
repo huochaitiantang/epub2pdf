@@ -1,6 +1,5 @@
 
 import os
-import bs4
 from bs4 import BeautifulSoup
 from parse_content import ContentParser
 
@@ -12,7 +11,6 @@ class Chapter(object):
         self.chapter_name = os.path.basename(html_file)
         html = open(html_file, 'rb').read()
         bs = BeautifulSoup(html, features='html.parser')
-        html_dir = os.path.basename(html_file)
 
         self.content = ContentParser(os.path.dirname(html_file))
         self.content.parse(bs.body)
