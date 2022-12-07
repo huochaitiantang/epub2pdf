@@ -94,7 +94,7 @@ class FontStyles(object):
         ct.textColor = colors.black
         ct.wordWrap = "CJK"     # auto new line
         ct.alignment = 0        # left alignment
-        ct.firstLineIndent = 0
+        ct.firstLineIndent = 2 * 12
         ct.leading = 18         # line interval
         ct.spaceAfter = 8
         return ct
@@ -103,6 +103,7 @@ class FontStyles(object):
 class PDFWriter(object):
     def __init__(self, font_name=None):
         self.list = []
+        self.guides = []
         if font_name:
             assert font_name in FONT_NAMES, "{} not in {}!".format(font_name, FONT_NAMES)
             global FONT_NAME
@@ -141,6 +142,9 @@ class PDFWriter(object):
         if len(self.list) > 0:
             self.list.append(PageBreak())
 
+    def set_guides(self, guides):
+        self.guides = guides
+
     def export_pdf(self, out_pdf_path):
         doc = SimpleDocTemplate(out_pdf_path, pagesize=A4)
         doc.build(self.list, onFirstPage=self.header_footer, onLaterPages=self.header_footer)
@@ -150,3 +154,9 @@ class PDFWriter(object):
         canvas.setFont(FONT_NAME, 10)
         W, H = A4
         canvas.drawString(W / 2, 30, "- %d -" % doc.page)
+        # set OutlineEntry
+        for title, key in self.guides:
+            # print("Set OutlineEntry:", title, key)
+            canvas.addOutlineEntry(title, key, level=0)
+            canvas.showOutline()
+        self.guides.clear()

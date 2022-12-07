@@ -70,6 +70,7 @@ def process(path, export_txt, export_pdf, font_name):
     else:
         raise Exception("File or directory {} not existed!".format(path))
 
+
 if __name__ == "__main__":
     process(
         sys.argv[1],

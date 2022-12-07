@@ -51,11 +51,20 @@ class Book(object):
         for chapter_file in chapter_files:
             self.chapters.append(Chapter(chapter_file))
 
+        # outline guides
+        self.guides = []
+        for guide in bs.package.guide.findAll('reference'):
+            href = guide['href']
+            title = guide['title']
+            self.guides.append([title, href])
+        print(" + Found {} guide references.".format(len(self.guides)))
+
     def write_txt(self, fout):
         for chapter in self.chapters:
             chapter.write_txt(fout)
 
     def write_pdf(self, pdf_writer):
+        pdf_writer.set_guides(self.guides)
         for chapter in self.chapters:
             chapter.write_pdf(pdf_writer)
 
